@@ -1,0 +1,174 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Vertical Movement</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="canonical" href="http://html5-templates.com/" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<!-- Place favicon.ico in the root directory -->
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<header>
+	</header>
+	<!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+	<div class="wrapAll clearfix">
+		<div class="sidebar">
+			<div class="logo">
+				<a href="/"><img src='img/logo.png' alt="logo"></a>
+			</div>
+			<div class="contentsPanel">
+				<div class="contentsHeader">Contents</div>
+				<ul>
+					<li><span>1</span><a href="#Gravity">Gravity</a></li>
+					<li><span>2</span><a href="#Speed">Speed</a></li>
+				</ul>
+			</div>
+
+
+		</div>
+		<div class="mainsection">
+			<div class="article">
+				<h1 id="Vertical_Movement">Vertical Movement</h1>
+				<p>
+					Vertical movement behaves much like horizontal movement, where a positive speed
+					(<code>Player_Y_Speed</code>)
+					represents downwards movement and a negative speed represents upwards movement. Unlike with
+					horizontal movement,
+					Mario's subspeed (<code>Player_Y_MoveForce</code>) is applied to his subpixel value, as vertical
+					movement would
+					be jarring otherwise.
+				</p>
+				<h2 id="Gravity">Gravity</h2>
+				<p>
+					Mario's gravity is only set under 4 different conditions:
+				</p>
+				<ul>
+					<li>When going through a screen transition, Mario's downwards gravity is set to 0x28</li>
+					<li>When Mario is above bounds in a water area, Mario's downwards gravity is set to 0x18</li>
+					<li>When Mario lands on a spring, his upwards gravity is set to 0x70. In SMB2J, his downwards
+						gravity is also set to
+						0x70.</li>
+					<li>When Mario jumps or swims (bouncing off a spring does not count, however jumping off a spring
+						does count),
+						his upwards and downwards gravity is set following this algorithm:</li>
+				</ul>
+				<pre><b>if</b> Player_State == 0 <b>or</b> (SwimmingFlag != 0 <b>and</b> (JumpSwimTimer != 0 <b>or</b> Player_Y_Speed &gt;= 0)) <b>then</b> <i>/* If Mario is on the ground, or Mario is swimming and either JumpSwimTimer is set or his speed is nonnegative */</i>
+    JumpSwimTimer := 32 <i>/* Reset timer */</i>
+    y_register := 0
+    Player_YMF_Dummy := 0 <i>/* Reset y subpixel */</i>
+    
+    JumpOrigin_Y_Position := Player_Y_Position <i>/* Used for an edge case at the very beginning of Mario's jump where Player_Y_Speed &lt; 0 and A_B_Buttons &amp; PreviousA_B_Buttons &amp; 0b10000000 == 0 */</i>
+    Player_State := 1
+    
+    <b>for</b> i := 0; i &lt; 4 <b>do</b>
+        <b>if</b> Player_XSpeedAbsolute &lt; [9, 16, 25, 28][i] <b>then</b>
+            <b>break</b>
+        <b>end</b>
+        
+        y_register := y_register + 1
+    <b>end</b>
+    
+    <b>if</b> SwimmingFlag != 0 <b>then</b> <i>/* If Mario is swimming */</i>
+        y_register := 5
+        
+        <b>if</b> Whirlpool_Flag != 0 <b>then</b> <i>/* If Mario is in a whirlpool */</i>
+            y_register := y_register + 1
+        <b>end</b>
+    <b>end</b>
+    
+    VerticalForce := JumpMForceData[y_register] <i>/* [0x20, 0x20, 0x1e, 0x28, 0x28, 0x0d, 0x04] for Mario, [0x18, 0x18, 0x18, 0x22, 0x22, 0x0d, 0x04] for Luigi */</i>
+    VerticalForceDown := FallMForceData[y_register] <i>/* [0x70, 0x70, 0x60, 0x90, 0x90, 0x0a, 0x09] for Mario, [0x42, 0x42, 0x3e, 0x5d, 0x5d, 0x0a, 0x09] for Luigi */</i>
+    Player_Y_MoveForce := InitMForceData[y_register] <i>/* [0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00] */</i>
+    Player_Y_Speed := PlayerYSpdData[y_register] <i>/* [0xfc, 0xfc, 0xfc, 0xfb, 0xfb, 0xfe, 0xff] */</i>
+    
+    <b>if</b> SwimmingFlag != 0 <b>and</b> Player_Y_Position &lt; 20 <b>then</b> <i>/* Check if above bounds in water areas */</i>
+        Player_Y_Speed := 0
+    <b>end</b>
+<b>end</b></pre>
+				<p>
+					Note that upwards and downwards gravity are stored in <code>VerticalForce</code> and
+					<code>VerticalForceDown</code> respectively. Only <code>VerticalForce</code> is ever applied to
+					Mario's speed
+					and subspeed. <code>VerticalForceDown</code> is copied to <code>VerticalForce</code> when Mario is
+					in the air
+					and either his speed is greater or equal to zero, or the A button has been released.
+				</p>
+				<h3 id="Low_Gravity">Low Gravity</h3>
+				<p>
+					Since Mario's downwards gravity is set to a low value (0x28) through screen transitions, he appears
+					to fall very
+					slowly. Since bouncing on enemies does not set his gravity, this is used in the SMB1 A Button
+					Challenge TAS to cross
+					large gaps in 1-1 and 8-2 without jumping.
+				</p>
+				<h2 id="Speed">Speed</h2>
+				<p>
+					Mario's speed is set in the following conditions:
+				</p>
+				<ul>
+					<li>When Mario jumps, his speed is set to <code>PlayerYSpdData[y_register]</code>, and his subspeed
+						is set to
+						<code>InitMForceData[y_register]</code> (see pseudocode above for exact values).
+					</li>
+					<li>When Mario bumps a soft block, his vertical speed is set to 0 if the block does not break, or -2
+						if it
+						does. His subspeed is not changed.</li>
+					<li>When Mario bumps a hard block (including when the bump timer has not reset yet, as all blocks
+						are hard) or
+						the bottom of a moving platform, his speed is set to 1. His subspeed is not changed. Note that
+						all blocks in
+						water areas are hard.</li>
+					<li>When Mario dies onscreen, his speed is set to -4 and his gravity is set and frozen to 0x28. His
+						subspeed is
+						not changed.</li>
+					<li>In SMB1, if you bounce off a Cheep Cheep, Bullet Bill, Podoboo, Hammer Bro, Lakitu, or a Blooper
+						Mario's
+						speed is set to -3. Any other enemy will set his speed to -4. His subspeed is not changed.</li>
+					<li>In SMB2J, if you bounce off a Red Parakoopa or a Flying Green Parakoopa (ones that fly in a
+						fixed path rather than
+						bounce on the ground), Mario's speed is set to -8. Any other enemy will set
+						his speed to -6. His subspeed is not changed.</li>
+					<li>When Mario lands on anything, his speed and subspeed is reset to 0.</li>
+					<li>When Mario is climbing, his speed is set to -1 and his subspeed is set to 0x20 when climbing up,
+						or 1 and
+						0xff when climbing down.</li>
+					<li>When Mario bounces on a red spring, his speed is set to -12 if A is held, and -7 otherwise. His
+						subspeed is
+						not explicitly reset however it is always reset beforehand when he lands on the spring. In
+						SMB2J, when Mario bounces
+						on a green spring, his speed is set to -32 if A is held, and -7 otherwise.</li>
+				</ul>
+				<h3 id="Speed_Cap">Speed Cap</h3>
+				<p>
+					The vertical speed cap for all sprite objects (including Mario) is implemented poorly. It checks for
+					whether the
+					object's speed and subspeed both exceed their respective intended caps (<code>SprObject_Y_Speed[x_register] &gt;= $02
+        <b>and</b> SprObject_Y_MoveForce[x_register] &gt;= 0x80</code>), forgetting to account for when it's speed is
+					above
+					the cap, but it's subspeed is below the cap (<code>SprObject_Y_Speed[x_register] &gt; $02</code>
+					<b>and</b>
+					<code>SprObject_Y_MoveForce[x_register] &lt; 0x80</code>). This allows Mario (and all other sprite
+					objects) to exceed
+					the intended speed cap, with precise subspeed manipulation (e.g. differing jump heights, ceiling
+					bonks, enemy bounces).
+					This is generally useless on NTSC, however it can be used in the PAL version to clip into the floor.
+				</p>
+			</div>
+			<div class="pagefooter">
+				Template by <a href="http://html5-templates.com/" target="_blank" rel="nofollow">HTML5 Templates</a>
+				<!-- Please leave this link unchanged -->
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

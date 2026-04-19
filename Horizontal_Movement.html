@@ -1,0 +1,219 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Horizontal Movement</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="canonical" href="http://html5-templates.com/" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<!-- Place favicon.ico in the root directory -->
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<header>
+	</header>
+	<!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+	<div class="wrapAll clearfix">
+		<div class="sidebar">
+			<div class="logo">
+				<a href="/"><img src='img/logo.png' alt="logo"></a>
+			</div>
+			<div class="contentsPanel">
+				<div class="contentsHeader">Contents</div>
+				<ul>
+					<li><span>1</span><a href="#Acceleration">Acceleration</a></li>
+					<li><span>2</span><a href="#Speed_Resets">Speed Resets</a></li>
+					<li><span>3</span><a href="#Miscellaneous">Miscellaneous</a></li>
+					<li><span>4</span><a href="#Wind_(SMB2J)">Wind (SMB2J)</a></li>
+				</ul>
+			</div>
+
+
+		</div>
+		<div class="mainsection">
+			<div class="article">
+				<h1>Horizontal Movement</h1>
+				<p>
+					At any point, Mario may be moving left or right, determined by the sign of his speed
+					(<code>Player_X_Speed</code>). His speed is measured in subpixels/frame. In non-water areas, his
+					speed is hard
+					capped at ±40 when <code>RunningTimer</code> is set, or soft capped at ±24 otherwise. In water
+					areas, his speed
+					is always hard capped at ±24, and soft capped at ±16 on the ground. Note that a "soft cap" refers to
+					the fact
+					that in practice it is possible to exceed this cap by holding either no directional inputs or the
+					opposite of
+					the directional input corresponding to the direction Mario is traveling. An exception exists during
+					the pipe
+					entrance cutscenes (where <code>GameEngineSubroutine == 7</code>) where Mario's speed is hard capped
+					to 12.
+				</p>
+				<p>
+					Mario's subspeed (<code>Player_X_MoveForce</code>) is only used in calculating acceleration, and
+					does not
+					contribute to updating his position.
+				</p>
+				<p>
+					<code>RunningTimer</code> is always set to 10 when B is held, Mario is on the ground and the
+					directional inputs
+					held correspond to the direction Mario is moving
+					(<code>Left_Right_Buttons == Player_MovingDir</code>, where
+					<code>Left_Right_Buttons</code> is set to <code>SavedJoypadBits &amp; 0x03</code>). It decrements by
+					1 every
+					frame these conditions aren't met.
+				</p>
+				<h2 id="Acceleration">Acceleration</h2>
+				<h3 id="Explanation">Explanation</h3>
+				<p>
+					Mario's horizontal acceleration is stored in <code>FrictionAdderHigh</code> and
+					<code>FrictionAdderLow</code>,
+					following this algorithm:
+				</p>
+				<pre>$00 := 0
+
+<b>if</b> Player_State != 0 <b>then</b> <i>/* if Mario is in the air */</i>
+    <b>if</b> Player_XSpeedAbsolute &lt; 25 <b>then</b>
+        $00 := $00 + 1
+        
+        <b>if</b> RunningSpeed <b>then</b> <i>/* RunningSpeed is set if Player_XSpeedAbsolute &gt;= 28 and is only unset if Left_Right_Buttons == Player_MovingDir and Player_XSpeedAbsolute &lt; 28 */</i>
+            $00 := $00 + 1
+        <b>end</b>
+    <b>end</b>
+<b>else</b> <i>/* if Mario is on the ground */</i>
+    <b>if</b> AreaType == 0 <b>then</b> <i>/* if in water area */</i>
+        $00 := $00 + 1
+    <b>else</b> <b>if</b> Left_Right_Buttons != Player_MovingDir <b>then</b>
+        $00 := $00 + 1
+        
+        <b>if</b> RunningSpeed <b>then</b>
+            $00 := $00 + 1
+        <b>end</b>
+    <b>else</b> <b>if</b> !(A_B_Buttons &amp; #B_Button) <b>and</b> !RunningTimer <b>then</b> <i>/* If B button is not pressed and RunningTimer is not set */</i>
+        $00 := $00 + 1
+    <b>end</b>
+<b>end</b>
+
+FrictionAdderLow := FrictionData[$00] <i>/* [0xe4, 0x98, 0xd0] for Mario, [0xb4, 0x68, 0xa0] for Luigi */</i>
+FrictionAdderHigh := 0
+
+<b>if</b> PlayerFacingDir != Player_MovingDir <b>then</b>
+    <i>/* Double Acceleration */</i>
+    FrictionAdderLow := FrictionAdderLow &lt;&lt; 1 <i>/* Rolls bit 7 into carry */</i>
+    FrictionAdderHigh := FrictionAdderHigh &lt;&lt; 1 <i>/* Rolls carry bit in */</i>
+<b>end</b></pre>
+				<p>
+					Note that pressing L+R sets <code>PlayerFacingDir</code> to 3 (0b00000011), but
+					<code>Player_MovingDir</code> is
+					based solely on the sign of Mario's speed. This means that when L+R is pressed, Mario's horizontal
+					acceleration
+					will always be double it's original value.
+				</p>
+				<p>
+					Mario's horizontal acceleration is then applied first to subspeed then to his speed depending on the
+					sign of his
+					speed and directional inputs (note that if Mario's speed is zero, his subspeed will not be updated
+					if no buttons
+					are held; see the last entry of <a href="#Speed_Resets">#Speed Resets</a>). His speed is then capped
+					to his
+					maximum speed which depends on if <code>RunningTimer</code> is set.
+				</p>
+				<h3 id="Fast_Acceleration">Fast Acceleration</h3>
+				<p>
+					As Mario accelerates faster when he is facing the opposite direction he is going, one can
+					deliberately take
+					advantage of this, performing a trick called a fast acceleration. TASes usually perform what's
+					called a L+R fast
+					acceleration, where the inputs <code>L+R, R+A</code> are performed at the beginning of a section.
+					RTA runners,
+					who are either console runners physically unable to press the Left and Right D-pad buttons together,
+					or emulator
+					players who follow a no L+R rule present on most speedrun leaderboards can still perform a fast
+					acceleration, by
+					performing the inputs <code>L, [nothing], R+A</code>. Note that [nothing] means no Left, Right, or A
+					inputs, as
+					at least one other button has to be held (see the last entry of <a href="#Speed_Resets">#Speed
+						Resets</a>). The
+					same idea is then applied by both RTA runners and TASers to gain maximum running speed quicker.
+				</p>
+				<h3 id="Subspeed_Manipulation">Subspeed Manipulation</h3>
+				<p>
+					As there exists no possible acceleration value that sets <code>FrictionAdderLow</code> to 0 (on
+					NTSC), Mario's
+					subspeed will fluctuate even when his speed is capped. His subspeed can be frozen by releasing all
+					directional
+					inputs while in the air, useful for manipulating the speed at which Mario will accelerate. A common
+					example is
+					releasing right for one frame in order to maintain a subspeed of 0xF0 following a L+R fast
+					acceleration,
+					allowing Mario to reach the maximum running speed slightly faster.
+				</p>
+				<h2 id="Speed_Resets">Speed Resets</h2>
+				<p>
+					Mario's speed is reset to zero when:
+				</p>
+				<ul>
+					<li>Mario collides with a wall</li>
+					<li>Mario collides with the left side of the screen while holding either Left (0x02), L+R (0x03) or
+						nothing
+						(0x00)</li>
+					<li>Mario dies</li>
+				</ul>
+				<p>
+					Mario's speed and subspeed are reset to zero when:
+				</p>
+				<ul>
+					<li>Mario enters a screen transition</li>
+					<li>Mario's absolute speed is less than 11, and any button (other than A and the direction Mario is
+						traveling) is pressed</li>
+				</ul>
+				<h2 id="Miscellaneous">Miscellaneous</h2>
+				<ul>
+					<li>
+						When Mario collects a powerup, the game will consider Mario to be on the ground for exactly one
+						frame,
+						allowing <code>RunningTimer</code> to be set. This can be exploited as you can obtain running
+						speed in the
+						air after grabbing a powerup. This is used in the category "1-1 as Fire Mario" where the fire
+						flower grab is
+						called a darG grab.
+					</li>
+					<li>
+						Leftward movement is fundamentally different than rightward movement, as e.g. +0xD0 speed is
+						stored as 00
+						D0, however -0xD0 speed is stored as FF 30 (upper byte signed two's complement), allowing Mario
+						to move one
+						subpixel left after only one frame of input from standby (00 00). This allows for fast
+						y-subpixel
+						manipulation off the left edge of a platform, as Mario can oscillate between -1 and 1 speed very
+						quickly.
+					</li>
+				</ul>
+				<h2 id="Wind_(SMB2J)">Wind (SMB2J)</h2>
+				<p>
+					In SMB2J, depending on whether the most significant bit of the frame counter is set, wind pushes
+					Mario by one
+					pixel every two or four frames (<code>FrameCounter &amp; 0b10000000 ? 2 : 4</code>). This can be
+					exploited as a
+					method to clip into walls with much more leniency than normal, or even to fully clip while Mario is
+					traveling
+					downwards, which is otherwise impossible.
+				</p>
+
+
+			</div>
+			<div class="pagefooter">
+				Template by <a href="http://html5-templates.com/" target="_blank" rel="nofollow">HTML5 Templates</a>
+				<!-- Please leave this link unchanged -->
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

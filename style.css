@@ -127,6 +127,9 @@ pre,
 samp {
 	font-family: monospace, monospace;
 	font-size: 1em;
+        background-color: var(--background-color-neutral-subtle, #f8f9fa);
+        color: var(--color-emphasized, #101418);
+        border: 1px solid var(--border-color-muted, #dadde3)
 }
 
 button,
@@ -432,7 +435,7 @@ body {
 	background: url(img/body-top.png) repeat-x top left #f6f6f6;
 }
 
-ul {
+.sidebar ul {
 	list-style-type: none;
 	list-style-image: none;
 	margin: 0;
