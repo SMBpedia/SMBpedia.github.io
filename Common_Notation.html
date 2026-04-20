@@ -1,0 +1,73 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Common Notation</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="canonical" href="http://html5-templates.com/" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<!-- Place favicon.ico in the root directory -->
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<header>
+	</header>
+	<!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+	<div class="wrapAll clearfix">
+		<div class="sidebar">
+			<div class="logo">
+				<a href="/"><img src='img/logo.png' alt="logo"></a>
+			</div>
+			<div class="contentsPanel">
+				<div class="contentsHeader">Contents</div>
+				<ul>
+					<li><span>1</span><a href="#position-string">Position String</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="mainsection">
+			<div class="article">
+				<h1 id="common-notation">Common Notation</h1>
+				<h2 id="position-string">Position String</h2>
+				<p>The position string is used to precisely keep track of Mario&#39;s position as he is moving. On the
+					practice ROM, it it located to the right of Sx. It consists of 4 <a
+						href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a> digits and a constant 0 digit
+					in the format ABC0-D.</p>
+				<h3 id="digits-b-and-c">Digits B and C</h3>
+					<div class="articleRight">
+						<div class="articleRightInner">
+							<img src="img/same-position-string.png"/>
+						</div>
+						Visualization of the line where the position string has the same value.</a>
+					</div>
+				<p>The B and C digits describe where Mario is horizontally. Assuming Mario is moving at max speed down
+					and right, the pixel and subpixel he will be at once he reaches the bottom of the screen are the B
+					and C digits respectively. This means that B and C stay constant while Mario is falling and moving
+					right.</p>
+				<h3 id="digit-a">Digit A</h3>
+				<p>While moving at max speed, Mario&#39;s subpixel alternates between two values. Digit A is used to
+					differentiate which set of subpixels Mario is switching between. </p>
+				<p>Digit A can range from 0 to 4 and is constant while running to the right. When combined with the 8
+					pairs C can have while moving, all 40 speed values can be represented. Losing 8 subpixels will
+					decrease A by 1. </p>
+				<h3 id="digit-d">Digit D</h3>
+				<p>Digit D is the last 2 bits of Mario&#39;s vertical pixel. This is equivalent to his vertical pixel
+					modulo 4, so D can range from 0 to 3. </p>
+				<p>This is used to represent the vertical offset within a position string, since 4 pixels vertically
+					have the same A, B, and C values. </p>
+			</div>
+			<div class="pagefooter">
+				Template by <a href="http://html5-templates.com/" target="_blank" rel="nofollow">HTML5 Templates</a>
+				<!-- Please leave this link unchanged -->
+			</div>
+		</div>
+	</div>
+</body>
+</html>
