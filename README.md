@@ -6,3 +6,4 @@
 - [Vertical Movement](Vertical_Movement)
 - [Any%](Any)
 - [Common Notation](Common_Notation)
+- [Getting Started](Getting_Started)

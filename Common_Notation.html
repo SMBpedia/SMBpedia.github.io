@@ -1,139 +1,148 @@
-<!doctype html>
-<html class="no-js" lang="en">
+<!DOCTYPE html>
 
+<html class="no-js" lang="en"><!--MARKDOWN
+#Common Notation
+##Position String
+The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits and a constant 0 digit in the format ABC0-D.
+![Visualization of where the position string has the same value.](img/same-position-string.png)
+###Digits B and C
+The B and C digits describe where Mario is horizontally. Assuming Mario is moving at max speed down and right, the pixel and subpixel he will be at once he reaches the bottom of the screen are the B and C digits respectively. This means that B and C stay constant while Mario is falling and moving right.
+
+###Digit A
+While moving at max speed, Mario's subpixel alternates between two values. Digit A is used to differentiate which set of subpixels Mario is switching between.
+
+Digit A can range from 0 to 4 and is constant while running to the right. When combined with the 8 pairs C can have while moving, all 40 speed values can be represented. Losing 8 subpixels will decrease A by 1.
+
+###Digit D
+Digit D is the last 2 bits of Mario's vertical pixel. This is equivalent to his vertical pixel modulo 4, so D can range from 0 to 3.
+
+This is used to represent the vertical offset within a position string, since 4 pixels vertically have the same A, B, and C values. 
+
+##Abbreviation Dictionary
+Abbreviation| 	Definition|
+|||
+BBBB 	|Bonk, Brush, Boing, Bounce
+BBFPG 	|Bullet Bill Flagpole Glitch
+BBG 	|Bullet Bill Glitch
+DFA 	|Double Fast Accel
+FA 	|Fast Accel
+FFPG 	|Full Flagpole Glitch
+FFA 	|Falling Fast Accel
+FPG 	|Flagpole Glitch
+FR 	|Framerule
+L4-2 	|Lightning 4-2
+RFA 	|Reverse Fast Accel
+TFA 	|Triple Fast Accel (Abbreviation is also used to refer to TAS accel)
+WJ 	|Wall Jump
+MARKDOWN-->
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>Common Notation</title>
-	<meta name="description" content="">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="canonical" href="http://html5-templates.com/" />
-	<link rel="apple-touch-icon" href="apple-touch-icon.png">
-	<!-- Place favicon.ico in the root directory -->
-	<link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="ie=edge" http-equiv="x-ua-compatible"/>
+<title>Common Notation</title>
+<meta content="" name="description"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="http://html5-templates.com/" rel="canonical"/>
+<link href="apple-touch-icon.png" rel="apple-touch-icon"/>
+<!-- Place favicon.ico in the root directory -->
+<link href="style.css" rel="stylesheet"/>
 </head>
-
 <body>
-	<header>
-	</header>
-	<!--[if lt IE 8]>
+<header>
+</header>
+<!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-
-	<div class="wrapAll clearfix">
-		<div class="sidebar">
-			<div class="logo">
-				<a href="/"><img src='img/logo.png' alt="logo"></a>
-			</div>
-			<div class="contentsPanel">
-				<div class="contentsHeader">Contents</div>
-				<ul>
-					<li><span>1</span><a href="#position-string">Position String</a></li>
-					<li><span>2</span><a href="#abbreviation-dictionary">Abbreviation Dictionary</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="mainsection">
-			<div class="article">
-				<h1 id="common-notation">Common Notation</h1>
-				<h2 id="position-string">Position String</h2>
-				<p>The position string is used to precisely keep track of Mario&#39;s position as he is moving. On the
-					practice ROM, it it located to the right of Sx. It consists of 4 <a
-						href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a> digits and a constant 0 digit
-					in the format ABC0-D.</p>
-				<h3 id="digits-b-and-c">Digits B and C</h3>
-				<div class="articleRight">
-					<div class="articleRightInner">
-						<img src="img/same-position-string.png" />
-					</div>
-					Visualization of the line where the position string has the same value.</a>
-				</div>
-				<p>The B and C digits describe where Mario is horizontally. Assuming Mario is moving at max speed down
-					and right, the pixel and subpixel he will be at once he reaches the bottom of the screen are the B
-					and C digits respectively. This means that B and C stay constant while Mario is falling and moving
-					right.</p>
-				<h3 id="digit-a">Digit A</h3>
-				<p>While moving at max speed, Mario&#39;s subpixel alternates between two values. Digit A is used to
-					differentiate which set of subpixels Mario is switching between. </p>
-				<p>Digit A can range from 0 to 4 and is constant while running to the right. When combined with the 8
-					pairs C can have while moving, all 40 speed values can be represented. Losing 8 subpixels will
-					decrease A by 1. </p>
-				<h3 id="digit-d">Digit D</h3>
-				<p>Digit D is the last 2 bits of Mario&#39;s vertical pixel. This is equivalent to his vertical pixel
-					modulo 4, so D can range from 0 to 3. </p>
-				<p>This is used to represent the vertical offset within a position string, since 4 pixels vertically
-					have the same A, B, and C values. </p>
-
-				<h2 id="abbreviation-dictionary">Abbreviation Dictionary</h2>
-				<table>
-					<thead>
-						<tr>
-							<th>Abbreviation</th>
-							<th>Definition</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>BBBB</td>
-							<td>Bonk, Brush, Boing, Bounce</td>
-						</tr>
-						<tr>
-							<td>BBFPG</td>
-							<td>Bullet Bill Flagpole Glitch</td>
-						</tr>
-						<tr>
-							<td>BBG</td>
-							<td>Bullet Bill Glitch</td>
-						</tr>
-						<tr>
-							<td>DFA</td>
-							<td>Double Fast Accel</td>
-						</tr>
-						<tr>
-							<td>FA</td>
-							<td>Fast Accel</td>
-						</tr>
-						<tr>
-							<td>FFPG</td>
-							<td>Full Flagpole Glitch</td>
-						</tr>
-						<tr>
-							<td>FFA</td>
-							<td>Falling Fast Accel</td>
-						</tr>
-						<tr>
-							<td>FPG</td>
-							<td>Flagpole Glitch</td>
-						</tr>
-						<tr>
-							<td>FR</td>
-							<td>Framerule</td>
-						</tr>
-						<tr>
-							<td>L4-2</td>
-							<td>Lightning 4-2</td>
-						</tr>
-						<tr>
-							<td>RFA</td>
-							<td>Reverse Fast Accel</td>
-						</tr>
-						<tr>
-							<td>TFA</td>
-							<td>Triple Fast Accel (Abbreviation is also used to refer to TAS accel)</td>
-						</tr>
-						<tr>
-							<td>WJ</td>
-							<td>Wall Jump</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="pagefooter">
-				Template by <a href="http://html5-templates.com/" target="_blank" rel="nofollow">HTML5 Templates</a>
-				<!-- Please leave this link unchanged -->
-			</div>
-		</div>
-	</div>
+<div class="wrapAll clearfix">
+<div class="sidebar">
+<div class="logo">
+<a href="/"><img alt="logo" src="img/logo.png"/></a>
+</div>
+<div class="contentsPanel">
+<div class="contentsHeader">Contents</div>
+<ul><li><span>1</span><a href="#Position_String">Position String</a></li><li><span>2</span><a href="#Abbreviation_Dictionary">Abbreviation Dictionary</a></li></ul>
+</div>
+</div>
+<div class="mainsection">
+<div class="article"><h1>Common Notation</h1>
+<section id="Position_String"><h2>Position String</h2>
+<p>The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 <a href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a> digits and a constant 0 digit in the format ABC0-D.
+<div class="articleRight"><div class="articleRightInner"><img src="img/same-position-string.png"/></div>Visualization of where the position string has the same value.</div></p>
+<h3>Digits B and C</h3>
+<p>The B and C digits describe where Mario is horizontally. Assuming Mario is moving at max speed down and right, the pixel and subpixel he will be at once he reaches the bottom of the screen are the B and C digits respectively. This means that B and C stay constant while Mario is falling and moving right.</p>
+<h3>Digit A</h3>
+<p>While moving at max speed, Mario's subpixel alternates between two values. Digit A is used to differentiate which set of subpixels Mario is switching between.</p>
+<p>Digit A can range from 0 to 4 and is constant while running to the right. When combined with the 8 pairs C can have while moving, all 40 speed values can be represented. Losing 8 subpixels will decrease A by 1.</p>
+<h3>Digit D</h3>
+<p>Digit D is the last 2 bits of Mario's vertical pixel. This is equivalent to his vertical pixel modulo 4, so D can range from 0 to 3.</p>
+<p>This is used to represent the vertical offset within a position string, since 4 pixels vertically have the same A, B, and C values. </p>
+</section><section id="Abbreviation_Dictionary"><h2>Abbreviation Dictionary</h2>
+<table>
+<thead>
+<tr>
+<th>Abbreviation</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BBBB</td>
+<td>Bonk, Brush, Boing, Bounce</td>
+</tr>
+<tr>
+<td>BBFPG</td>
+<td>Bullet Bill Flagpole Glitch</td>
+</tr>
+<tr>
+<td>BBG</td>
+<td>Bullet Bill Glitch</td>
+</tr>
+<tr>
+<td>DFA</td>
+<td>Double Fast Accel</td>
+</tr>
+<tr>
+<td>FA</td>
+<td>Fast Accel</td>
+</tr>
+<tr>
+<td>FFPG</td>
+<td>Full Flagpole Glitch</td>
+</tr>
+<tr>
+<td>FFA</td>
+<td>Falling Fast Accel</td>
+</tr>
+<tr>
+<td>FPG</td>
+<td>Flagpole Glitch</td>
+</tr>
+<tr>
+<td>FR</td>
+<td>Framerule</td>
+</tr>
+<tr>
+<td>L4-2</td>
+<td>Lightning 4-2</td>
+</tr>
+<tr>
+<td>RFA</td>
+<td>Reverse Fast Accel</td>
+</tr>
+<tr>
+<td>TFA</td>
+<td>Triple Fast Accel (Abbreviation is also used to refer to TAS accel)</td>
+</tr>
+<tr>
+<td>WJ</td>
+<td>Wall Jump</td>
+</tr>
+</tbody>
+</table></section></div>
+<div class="pagefooter">
+				Template by <a href="http://html5-templates.com/" rel="nofollow" target="_blank">HTML5 Templates</a>
+<!-- Please leave this link unchanged -->
+</div>
+</div>
+</div>
 </body>
-
 </html>
