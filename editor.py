@@ -17,6 +17,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from PySide6.QtWebEngineWidgets import QWebEngineView
+from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor
+from spellchecker import SpellChecker
+import re
 
 
 TEMPLATE_FILE = "template.html"
@@ -28,6 +31,33 @@ def slugify(text):
     text = re.sub(r"\s+", "_", text)
     return text
 
+class SpellHighlighter(QSyntaxHighlighter):
+    def __init__(self, document):
+        super().__init__(document)
+
+        self.spell = SpellChecker()
+
+        self.spell.word_frequency.load_text_file('dictionary.txt')
+        self.error_format = QTextCharFormat()
+        self.error_format.setUnderlineColor(QColor("red"))
+        self.error_format.setUnderlineStyle(
+            QTextCharFormat.SpellCheckUnderline
+        )
+
+    def highlightBlock(self, text):
+        for match in re.finditer(r"[A-Za-z']+", text):
+            word = match.group()
+
+            # Ignore markdown syntax
+            if word.startswith("#"):
+                continue
+
+            if word.lower() not in self.spell:
+                self.setFormat(
+                    match.start(),
+                    len(word),
+                    self.error_format
+                )
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -39,6 +69,7 @@ class MainWindow(QMainWindow):
         self.template = Path(TEMPLATE_FILE).read_text(encoding="utf8")
 
         self.editor = QTextEdit()
+        self.highlighter = SpellHighlighter(self.editor.document())
 
         self.preview = QWebEngineView()
 
