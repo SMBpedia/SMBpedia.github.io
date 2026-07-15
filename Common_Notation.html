@@ -3,7 +3,7 @@
 <html class="no-js" lang="en"><!--MARKDOWN
 #Common Notation
 ##Position String
-The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits and a constant 0 digit in the format ABC0-D.
+The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits and a constant 0 digit in the format **ABC0-D**.
 ![Visualization of where the position string has the same value.](img/same-position-string.png)
 ###Digits B and C
 The B and C digits describe where Mario is horizontally. Assuming Mario is moving at max speed down and right, the pixel and subpixel he will be at once he reaches the bottom of the screen are the B and C digits respectively. This means that B and C stay constant while Mario is falling and moving right.
@@ -18,6 +18,23 @@ Digit D is the last 2 bits of Mario's vertical pixel. This is equivalent to his 
 
 This is used to represent the vertical offset within a position string, since 4 pixels vertically have the same A, B, and C values. 
 
+
+##Flashing
+(e.g. D5, C4, F7)
+
+While running on the ground, digit C of the position string alternates or "flashes" between two values. The values are 8 apart in hex since mario moves 2 pixels and 8 subpixels every frame. Looking at which values are flashing can often be a quick way to identify if Mario is positioned correctly.
+
+##Room Breakdown
+(e.g. B>D>63>C+2)
+
+This sequence explains what pace a runner got in each room of [8-4](8-4).
+
+The first two digits are the pace entering walljump room and turnaround room respectively. On the practice ROM this is shown to the right of Rx after the dash (directly to the left of Fx). This indicate the frame within a framerule that the room is entered. Since framerules are in increments of 21 frames, the 21 possible values are 0-9 and A-K, with higher being faster. 
+
+The third number is the frame Mario enters the pipe to exit turnaround room.
+
+The final numbers indicate the pace entering last room as well as the number of frames gained or lost before touching the axe.
+
 ##Abbreviation Dictionary
 Abbreviation| 	Definition|
 |||
@@ -31,8 +48,10 @@ FFA 	|Falling Fast Accel
 FPG 	|Flagpole Glitch
 FR 	|Framerule
 L4-2 	|Lightning 4-2
+R0-R20	|Remainder
 RFA 	|Reverse Fast Accel
-TFA 	|Triple Fast Accel (Abbreviation is also used to refer to TAS accel)
+RLR	|Right Left Right (on consecutive frames)
+TFA 	|Triple Fast Accel (also used to refer to TAS accel)
 WJ 	|Wall Jump
 MARKDOWN-->
 <head>
@@ -59,13 +78,13 @@ MARKDOWN-->
 </div>
 <div class="contentsPanel">
 <div class="contentsHeader">Contents</div>
-<ul><li><span>1</span><a href="#Position_String">Position String</a></li><li><span>2</span><a href="#Abbreviation_Dictionary">Abbreviation Dictionary</a></li></ul>
+<ul><li><span>1</span><a href="#Position_String">Position String</a></li><li><span>2</span><a href="#Flashing">Flashing</a></li><li><span>3</span><a href="#Room_Breakdown">Room Breakdown</a></li><li><span>4</span><a href="#Abbreviation_Dictionary">Abbreviation Dictionary</a></li></ul>
 </div>
 </div>
 <div class="mainsection">
 <div class="article"><h1>Common Notation</h1>
 <section id="Position_String"><h2>Position String</h2>
-<p>The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 <a href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a> digits and a constant 0 digit in the format ABC0-D.
+<p>The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 <a href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a> digits and a constant 0 digit in the format <strong>ABC0-D</strong>.
 <div class="articleRight"><div class="articleRightInner"><img src="img/same-position-string.png"/></div>Visualization of where the position string has the same value.</div></p>
 <h3>Digits B and C</h3>
 <p>The B and C digits describe where Mario is horizontally. Assuming Mario is moving at max speed down and right, the pixel and subpixel he will be at once he reaches the bottom of the screen are the B and C digits respectively. This means that B and C stay constant while Mario is falling and moving right.</p>
@@ -75,6 +94,15 @@ MARKDOWN-->
 <h3>Digit D</h3>
 <p>Digit D is the last 2 bits of Mario's vertical pixel. This is equivalent to his vertical pixel modulo 4, so D can range from 0 to 3.</p>
 <p>This is used to represent the vertical offset within a position string, since 4 pixels vertically have the same A, B, and C values. </p>
+</section><section id="Flashing"><h2>Flashing</h2>
+<p>(e.g. D5, C4, F7)</p>
+<p>While running on the ground, digit C of the position string alternates or "flashes" between two values. The values are 8 apart in hex since mario moves 2 pixels and 8 subpixels every frame. Looking at which values are flashing can often be a quick way to identify if Mario is positioned correctly.</p>
+</section><section id="Room_Breakdown"><h2>Room Breakdown</h2>
+<p>(e.g. B&gt;D&gt;63&gt;C+2)</p>
+<p>This sequence explains what pace a runner got in each room of <a href="8-4">8-4</a>.</p>
+<p>The first two digits are the pace entering walljump room and turnaround room respectively. On the practice ROM this is shown to the right of Rx after the dash (directly to the left of Fx). This indicate the frame within a framerule that the room is entered. Since framerules are in increments of 21 frames, the 21 possible values are 0-9 and A-K, with higher being faster. </p>
+<p>The third number is the frame Mario enters the pipe to exit turnaround room.</p>
+<p>The final numbers indicate the pace entering last room as well as the number of frames gained or lost before touching the axe.</p>
 </section><section id="Abbreviation_Dictionary"><h2>Abbreviation Dictionary</h2>
 <table>
 <thead>
@@ -125,12 +153,20 @@ MARKDOWN-->
 <td>Lightning 4-2</td>
 </tr>
 <tr>
+<td>R0-R20</td>
+<td>Remainder</td>
+</tr>
+<tr>
 <td>RFA</td>
 <td>Reverse Fast Accel</td>
 </tr>
 <tr>
+<td>RLR</td>
+<td>Right Left Right (on consecutive frames)</td>
+</tr>
+<tr>
 <td>TFA</td>
-<td>Triple Fast Accel (Abbreviation is also used to refer to TAS accel)</td>
+<td>Triple Fast Accel (also used to refer to TAS accel)</td>
 </tr>
 <tr>
 <td>WJ</td>
