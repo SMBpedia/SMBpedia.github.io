@@ -49,3 +49,5 @@ emsp
 img
 rlr
 rla
+nes
+snes
