@@ -68,3 +68,4 @@ html
 dll
 keybind
 keybinds
+sockfolder
