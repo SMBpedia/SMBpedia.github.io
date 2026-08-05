@@ -77,3 +77,4 @@ savestate
 savestates
 subspeed
 subspeeds
+pseudorandom

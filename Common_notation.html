@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
 <html class="no-js" lang="en"><!--MARKDOWN
-#Common Notation
-##Position String
+#Common notation
+##Position string
 (e.g. 1D70-1)
  
 The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits and a constant 0 digit in the format **ABC0-D**.
@@ -28,14 +28,14 @@ This is used to represent the vertical offset within a position string, since 4 
 
 While running on the ground, digit C of the position string alternates or "flashes" between two values. The values are 8 apart in hex since mario moves 2 pixels and 8 subpixels every frame. Looking at which values are flashing can often be a quick way to identify if Mario is positioned correctly.
 
-##Room Pace
+##Room pace
 (e.g. 8-E, 1-D)
 
 The second digit indicates the frame within a framerule that a room is entered. It is the value of the framerule counter on the frame the screen loads. On the practice ROM, this is shown to the right of Rx after the dash (directly to the left of Fx). Since framerules are 21 frames long, the value is shown in base 21, meaning the 21 possible values are 0-9 and A-K. A higher number indicates a faster pace.
 
 The first digit is the world number. This convention is a holdover from an old practice ROM made by Sockfolder that replaced the level number with the room pace.
 
-##Room Breakdown
+##Room breakdown
 (e.g. B>D>63>C+2)
 
 This sequence explains what pace a runner got in each room of [8-4](8-4).
@@ -44,7 +44,7 @@ The first two digits are the room pace entering walljump room and turnaround roo
 
 The final numbers indicate the pace entering last room as well as the number of frames gained or lost before touching the axe.
 
-##Abbreviation Dictionary
+##Abbreviation dictionary
 Abbreviation| 	Definition|
 |||
 BBBB 	|Bonk, Brush, Boing, Bounce
@@ -66,7 +66,7 @@ MARKDOWN-->
 <head>
 <meta charset="utf-8"/>
 <meta content="ie=edge" http-equiv="x-ua-compatible"/>
-<title>Common Notation</title>
+<title>Common notation</title>
 <meta content="" name="description"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <link href="http://html5-templates.com/" rel="canonical"/>
@@ -87,12 +87,12 @@ MARKDOWN-->
 </div>
 <div class="contentsPanel">
 <div class="contentsHeader">Contents</div>
-<ul><li><span>1</span><a href="#Position_String">Position String</a></li><li><span>2</span><a href="#Flashing">Flashing</a></li><li><span>3</span><a href="#Room_Pace">Room Pace</a></li><li><span>4</span><a href="#Room_Breakdown">Room Breakdown</a></li><li><span>5</span><a href="#Abbreviation_Dictionary">Abbreviation Dictionary</a></li></ul>
+<ul><li><span>1</span><a href="#Position_string">Position string</a></li><li><span>2</span><a href="#Flashing">Flashing</a></li><li><span>3</span><a href="#Room_pace">Room pace</a></li><li><span>4</span><a href="#Room_breakdown">Room breakdown</a></li><li><span>5</span><a href="#Abbreviation_dictionary">Abbreviation dictionary</a></li></ul>
 </div>
 </div>
 <div class="mainsection">
-<div class="article"><h1>Common Notation</h1>
-<section id="Position_String"><h2>Position String</h2>
+<div class="article"><h1>Common notation</h1>
+<section id="Position_string"><h2>Position string</h2>
 <p>(e.g. 1D70-1)</p>
 <p>The position string is used to precisely keep track of Mario's position as he is moving. On the practice ROM, it it located to the right of Sx. It consists of 4 <a href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a> digits and a constant 0 digit in the format <strong>ABC0-D</strong>.
 <div class="articleRight"><div class="articleRightInner"><img src="img/same-position-string.png"/></div>Visualization of where the position string has the same value.</div></p>
@@ -108,16 +108,16 @@ MARKDOWN-->
 </section><section id="Flashing"><h2>Flashing</h2>
 <p>(e.g. D5, C4, F7)</p>
 <p>While running on the ground, digit C of the position string alternates or "flashes" between two values. The values are 8 apart in hex since mario moves 2 pixels and 8 subpixels every frame. Looking at which values are flashing can often be a quick way to identify if Mario is positioned correctly.</p>
-</section><section id="Room_Pace"><h2>Room Pace</h2>
+</section><section id="Room_pace"><h2>Room pace</h2>
 <p>(e.g. 8-E, 1-D)</p>
 <p>The second digit indicates the frame within a framerule that a room is entered. It is the value of the framerule counter on the frame the screen loads. On the practice ROM, this is shown to the right of Rx after the dash (directly to the left of Fx). Since framerules are 21 frames long, the value is shown in base 21, meaning the 21 possible values are 0-9 and A-K. A higher number indicates a faster pace.</p>
 <p>The first digit is the world number. This convention is a holdover from an old practice ROM made by Sockfolder that replaced the level number with the room pace.</p>
-</section><section id="Room_Breakdown"><h2>Room Breakdown</h2>
+</section><section id="Room_breakdown"><h2>Room breakdown</h2>
 <p>(e.g. B&gt;D&gt;63&gt;C+2)</p>
 <p>This sequence explains what pace a runner got in each room of <a href="8-4">8-4</a>.</p>
 <p>The first two digits are the room pace entering walljump room and turnaround room respectively. The third number is the frame Mario enters the pipe to exit turnaround room.</p>
 <p>The final numbers indicate the pace entering last room as well as the number of frames gained or lost before touching the axe.</p>
-</section><section id="Abbreviation_Dictionary"><h2>Abbreviation Dictionary</h2>
+</section><section id="Abbreviation_dictionary"><h2>Abbreviation dictionary</h2>
 <table>
 <thead>
 <tr>
