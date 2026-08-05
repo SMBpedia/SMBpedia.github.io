@@ -11,7 +11,23 @@ If Mario has good subspeed, the pole inputs can be more lenient, but a bad subsp
 ## TASing
 <iframe width="480" height="360" src="https://www.youtube.com/embed/IICPfu5FGUs"></iframe>	
 ## Technical explanation
-
+In the flagpole collision subroutine, there is a check if Mario is below a certain point on the screen. If so, it skips ahead past the code that makes the flag lower..
+```
+FlagpoleRoutine:
+           ...
+           lda Player_Y_Position     ;check player's vertical coordinate
+           cmp #$a2                  ;if player down to a certain point,
+           bcs GiveFPScr             ;branch to end the level
+           lda Enemy_YMF_Dummy,x
+           adc #$ff                  ;add movement amount to dummy variable
+           sta Enemy_YMF_Dummy,x     ;save dummy variable
+           lda Enemy_Y_Position,x    ;get flag's vertical coordinate
+           adc #$01                  ;add 1 plus carry to move flag, and
+           sta Enemy_Y_Position,x    ;store vertical coordinate
+           ...
+GiveFPScr:
+```
+It is unknown why this check exists, but it is theorized it could be a remnant of removed code or as a type of failsafe. 
 ## Full flagpole glitch
 
 ## See also
@@ -55,6 +71,22 @@ MARKDOWN-->
 </section><section id="TASing"><h2>TASing</h2>
 <iframe height="360" src="https://www.youtube.com/embed/IICPfu5FGUs" width="480"></iframe>
 </section><section id="Technical_explanation"><h2>Technical explanation</h2>
+<p>In the flagpole collision subroutine, there is a check if Mario is below a certain point on the screen. If so, it skips ahead past the code that makes the flag lower..</p>
+<pre><code>FlagpoleRoutine:
+           ...
+           lda Player_Y_Position     ;check player's vertical coordinate
+           cmp #$a2                  ;if player down to a certain point,
+           bcs GiveFPScr             ;branch to end the level
+           lda Enemy_YMF_Dummy,x
+           adc #$ff                  ;add movement amount to dummy variable
+           sta Enemy_YMF_Dummy,x     ;save dummy variable
+           lda Enemy_Y_Position,x    ;get flag's vertical coordinate
+           adc #$01                  ;add 1 plus carry to move flag, and
+           sta Enemy_Y_Position,x    ;store vertical coordinate
+           ...
+GiveFPScr:
+</code></pre>
+<p>It is unknown why this check exists, but it is theorized it could be a remnant of removed code or as a type of failsafe. </p>
 </section><section id="Full_flagpole_glitch"><h2>Full flagpole glitch</h2>
 </section><section id="See_also"><h2>See also</h2>
 <p><a href="https://rentry.org/smbfpg">Sockfolder FPG Guide</a> by mrswaggins (unfinished)</p></section></div>

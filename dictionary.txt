@@ -8,6 +8,7 @@ framerule
 framerules
 tas
 tases
+tasing
 bowser
 bowsers
 koopa
@@ -69,3 +70,10 @@ dll
 keybind
 keybinds
 sockfolder
+kaname
+patcher
+hud
+savestate
+savestates
+subspeed
+subspeeds
