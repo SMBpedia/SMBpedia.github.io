@@ -78,3 +78,7 @@ savestates
 subspeed
 subspeeds
 pseudorandom
+blant
+blants
+iframe
+mp
