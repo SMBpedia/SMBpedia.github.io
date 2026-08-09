@@ -15,9 +15,10 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QVBoxLayout,
     QWidget,
+    QMessageBox
 )
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor
+from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor, QKeySequence, QShortcut, QFont
 from spellchecker import SpellChecker
 import re
 
@@ -102,6 +103,20 @@ class MainWindow(QMainWindow):
         self.open_button.clicked.connect(self.open_html)
         self.save_button.clicked.connect(self.save_html)
 
+        # Add keyboard shortcuts
+        self.open_shortcut = QShortcut(QKeySequence("Ctrl+O"), self)
+        self.open_shortcut.activated.connect(self.open_html)
+        
+        self.save_shortcut = QShortcut(QKeySequence("Ctrl+S"), self)
+        self.save_shortcut.activated.connect(self.save_html)
+
+        # Add zoom shortcuts
+        self.zoom_in_shortcut = QShortcut(QKeySequence("Ctrl++"), self)
+        self.zoom_in_shortcut.activated.connect(self.zoom_in)
+        
+        self.zoom_out_shortcut = QShortcut(QKeySequence("Ctrl+-"), self)
+        self.zoom_out_shortcut.activated.connect(self.zoom_out)
+
         self.editor.setPlainText(
 """# Page Title
 
@@ -127,6 +142,8 @@ Even more text.
         self.timer.start(100)
 
     def markdown_to_html(self, md):
+        # Process video macros before markdown conversion
+        md = self.process_video_macros(md)
 
         html = markdown.markdown(
             md,
@@ -196,6 +213,24 @@ Even more text.
                 current.append(child)
 
         return page_title, article, sections
+
+    def process_video_macros(self, md):
+        """Process video embedding macros"""
+        # Handle local videos: [VIDEO <path>]
+        def replace_local_video(match):
+            path = match.group(1)
+            return f'<video controls type="video/mp4" height="360" src="{path}" width="480" preload="metadata"></video>'
+        
+        md = re.sub(r'\[VIDEO\s+(.+?)\]', replace_local_video, md, flags=re.IGNORECASE)
+        
+        # Handle external videos: [IFRAME <video id>]
+        def replace_external_video(match):
+            video_id = match.group(1)
+            return f'<iframe height="360" src="https://www.youtube.com/embed/{video_id}" width="480"></iframe>'
+        
+        md = re.sub(r'\[IFRAME\s+(.+?)\]', replace_external_video, md, flags=re.IGNORECASE)
+        
+        return md
 
     def build_html(self):
 
@@ -307,6 +342,22 @@ Even more text.
             "Markdown Not Found",
             "This HTML file does not contain embedded markdown."
         )
+
+    def zoom_in(self):
+        """Increase font size of the editor"""
+        current_font = self.editor.font()
+        current_size = current_font.pointSize()
+        if current_size < 72:  # Maximum reasonable size
+            current_font.setPointSize(current_size + 1)
+            self.editor.setFont(current_font)
+
+    def zoom_out(self):
+        """Decrease font size of the editor"""
+        current_font = self.editor.font()
+        current_size = current_font.pointSize()
+        if current_size > 6:  # Minimum reasonable size
+            current_font.setPointSize(current_size - 1)
+            self.editor.setFont(current_font)
 
 
 app = QApplication(sys.argv)
