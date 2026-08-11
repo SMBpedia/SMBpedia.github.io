@@ -15,6 +15,9 @@
 
 <body>
 	<header>
+		<div class="mobile-header">
+			<button class="menu-toggle" aria-label="Toggle navigation">☰</button>
+		</div>
 	</header>
 	<!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -35,8 +38,6 @@
                 <div style="margin-top: 1em;" class="contentsHeader">Other pages</div>
                 <script src="list-pages.js"></script>
 			</div>
-
-
 		</div>
 		<div class="mainsection">
 			<div class="article">
@@ -49,6 +50,39 @@
 			</div>
 		</div>
 	</div>
-</body>
 
+	<script>
+		// Mobile menu toggle functionality
+		document.addEventListener('DOMContentLoaded', function() {
+			const menuToggle = document.querySelector('.menu-toggle');
+			const sidebar = document.querySelector('.sidebar');
+			const overlay = document.createElement('div');
+			
+			// Create overlay element
+			overlay.className = 'mobile-overlay';
+			document.body.appendChild(overlay);
+			
+			if (menuToggle) {
+				menuToggle.addEventListener('click', function() {
+					sidebar.classList.toggle('mobile-open');
+					overlay.classList.toggle('active');
+				});
+			}
+			
+			// Close sidebar when clicking overlay
+			overlay.addEventListener('click', function() {
+				sidebar.classList.remove('mobile-open');
+				overlay.classList.remove('active');
+			});
+			
+			// Close sidebar on Escape key
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') {
+					sidebar.classList.remove('mobile-open');
+					overlay.classList.remove('active');
+				}
+			});
+		});
+	</script>
+</body>
 </html>
