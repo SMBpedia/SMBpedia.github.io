@@ -219,14 +219,14 @@ Even more text.
         # Handle local videos: [VIDEO <path>]
         def replace_local_video(match):
             path = match.group(1)
-            return f'<video controls type="video/mp4" height="360" src="{path}" width="480" preload="metadata"></video>'
+            return f'<video class="videoEmbed" controls type="video/mp4" src="{path}" preload="metadata"></video>'
         
         md = re.sub(r'\[VIDEO\s+(.+?)\]', replace_local_video, md, flags=re.IGNORECASE)
         
         # Handle external videos: [IFRAME <video id>]
         def replace_external_video(match):
             video_id = match.group(1)
-            return f'<iframe height="360" src="https://www.youtube.com/embed/{video_id}" width="480"></iframe>'
+            return f'<iframe class="youtubeEmbed" src="https://www.youtube.com/embed/{video_id}"></iframe>'
         
         md = re.sub(r'\[IFRAME\s+(.+?)\]', replace_external_video, md, flags=re.IGNORECASE)
         
