@@ -2,7 +2,9 @@
 
 <html class="no-js" lang="en"><!--MARKDOWN
 # Flagpole glitch
-Flagpole glitch (FPG) is one of the time-saving tricks used in speedruns. By grabbing the flagpole from within the base block, the animation of the flag lowering is skipped, generally saving one framerule. FPG requires precise positioning and usually requires multiple frame perfect inputs. In the any% route, FPG can be preformed up to five times. 
+**Flagpole glitch** (FPG) is one of the time-saving tricks used in speedruns. By grabbing the flagpole from within the base block, the animation of the flag lowering is skipped, generally saving one framerule. FPG requires precise positioning and usually requires multiple frame perfect inputs. In the [any%](Any) route, FPG can be preformed up to five times. 
+
+FPG was discovered in 2007 by the taser klmz. 
 ## Sockfolder setup
 The most common setup for FPG was found by the glitch hunter Sockfolder in 2016 with a brute force search. It involves landing on the first pixel of the 6th step of the stairs while only holding right, pressing B the frame you land, and then jumping two frames later. When you reach the base block of the flagpole press L, L, L, L+A so that you jump on the first possible frame. 
 
@@ -11,7 +13,7 @@ If Mario has good subspeed, the pole inputs can be more lenient, but a bad subsp
 ## TASing
 [IFRAME IICPfu5FGUs]	
 ## Technical explanation
-In the flagpole collision subroutine, there is a check if Mario is below a certain point on the screen. If so, it skips ahead past the code that makes the flag lower..
+In the flagpole collision subroutine, there is a check for if Mario is below a certain point on the screen. If so, it skips ahead past the code that makes the flag lower.
 ```
 FlagpoleRoutine:
            ...
@@ -29,6 +31,9 @@ GiveFPScr:
 ```
 It is unknown why this check exists, but it is theorized it could be a remnant of removed code or as a type of failsafe. 
 ## Full flagpole glitch
+If Mario grabs the flagpole a pixel lower than a typical FPG, he gets pushed out of the base block to the left, which skips both the flag lowering and Mario walking to the castle. Although this is around two seconds faster, on the NTSC version of the game it cannot be preformed without either clipping into the floor or bouncing off an enemy. On PAL, however, it can be preformed on every flagpole by doing extremely precise pole inputs. 
+
+[Bullet bill glitch](Bullet_bill_glitch) is a full flagpole glitch that uses a bullet bill to grab the flagpole low enough.
 
 ## See also
 
@@ -69,7 +74,8 @@ MARKDOWN-->
 </div>
 <div class="mainsection">
 <div class="article"><h1>Flagpole glitch</h1>
-<p>Flagpole glitch (FPG) is one of the time-saving tricks used in speedruns. By grabbing the flagpole from within the base block, the animation of the flag lowering is skipped, generally saving one framerule. FPG requires precise positioning and usually requires multiple frame perfect inputs. In the any% route, FPG can be preformed up to five times. </p>
+<p><strong>Flagpole glitch</strong> (FPG) is one of the time-saving tricks used in speedruns. By grabbing the flagpole from within the base block, the animation of the flag lowering is skipped, generally saving one framerule. FPG requires precise positioning and usually requires multiple frame perfect inputs. In the <a href="Any">any%</a> route, FPG can be preformed up to five times. </p>
+<p>FPG was discovered in 2007 by the taser klmz. </p>
 <section id="Sockfolder_setup"><h2>Sockfolder setup</h2>
 <p>The most common setup for FPG was found by the glitch hunter Sockfolder in 2016 with a brute force search. It involves landing on the first pixel of the 6th step of the stairs while only holding right, pressing B the frame you land, and then jumping two frames later. When you reach the base block of the flagpole press L, L, L, L+A so that you jump on the first possible frame. </p>
 <p>If Mario has good subspeed, the pole inputs can be more lenient, but a bad subspeed can make FPG impossible. </p>
@@ -77,7 +83,7 @@ MARKDOWN-->
 </section><section id="TASing"><h2>TASing</h2>
 <iframe class="youtubeEmbed" src="https://www.youtube.com/embed/IICPfu5FGUs"></iframe>
 </section><section id="Technical_explanation"><h2>Technical explanation</h2>
-<p>In the flagpole collision subroutine, there is a check if Mario is below a certain point on the screen. If so, it skips ahead past the code that makes the flag lower..</p>
+<p>In the flagpole collision subroutine, there is a check for if Mario is below a certain point on the screen. If so, it skips ahead past the code that makes the flag lower.</p>
 <pre><code>FlagpoleRoutine:
            ...
            lda Player_Y_Position     ;check player's vertical coordinate
@@ -94,6 +100,8 @@ GiveFPScr:
 </code></pre>
 <p>It is unknown why this check exists, but it is theorized it could be a remnant of removed code or as a type of failsafe. </p>
 </section><section id="Full_flagpole_glitch"><h2>Full flagpole glitch</h2>
+<p>If Mario grabs the flagpole a pixel lower than a typical FPG, he gets pushed out of the base block to the left, which skips both the flag lowering and Mario walking to the castle. Although this is around two seconds faster, on the NTSC version of the game it cannot be preformed without either clipping into the floor or bouncing off an enemy. On PAL, however, it can be preformed on every flagpole by doing extremely precise pole inputs. </p>
+<p><a href="Bullet_bill_glitch">Bullet bill glitch</a> is a full flagpole glitch that uses a bullet bill to grab the flagpole low enough.</p>
 </section><section id="See_also"><h2>See also</h2>
 <p><a href="https://rentry.org/smbfpg">Sockfolder FPG Guide</a> by mrswaggins (unfinished)</p></section></div>
 <div class="pagefooter">
