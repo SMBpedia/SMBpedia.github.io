@@ -2,6 +2,7 @@
 
 <html class="no-js" lang="en"><!--MARKDOWN
 # Horizontal movement
+<!-- Writeup by slither--&gt;
 At any point, Mario may be moving left or right, determined by the sign of his speed `(Player_X_Speed)`. His speed is measured in subpixels/frame. In non-water areas, his speed is hard capped at ±40 when `RunningTimer` is set, or soft capped at ±24 otherwise. In water areas, his speed is always hard capped at ±24, and soft capped at ±16 on the ground. Note that a "soft cap" refers to the fact that in practice it is possible to exceed this cap by holding either no directional inputs or the opposite of the directional input corresponding to the direction Mario is traveling. An exception exists during the pipe entrance cutscenes (where `GameEngineSubroutine == 7`) where Mario's speed is hard capped to 12. 
 
 Mario's subspeed (`Player_X_MoveForce`) is only used in calculating acceleration, and does not contribute to updating his position. 
@@ -101,6 +102,7 @@ MARKDOWN-->
 </div>
 <div class="mainsection">
 <div class="article"><h1>Horizontal movement</h1>
+<!-- Writeup by slither-->
 <p>At any point, Mario may be moving left or right, determined by the sign of his speed <code>(Player_X_Speed)</code>. His speed is measured in subpixels/frame. In non-water areas, his speed is hard capped at ±40 when <code>RunningTimer</code> is set, or soft capped at ±24 otherwise. In water areas, his speed is always hard capped at ±24, and soft capped at ±16 on the ground. Note that a "soft cap" refers to the fact that in practice it is possible to exceed this cap by holding either no directional inputs or the opposite of the directional input corresponding to the direction Mario is traveling. An exception exists during the pipe entrance cutscenes (where <code>GameEngineSubroutine == 7</code>) where Mario's speed is hard capped to 12. </p>
 <p>Mario's subspeed (<code>Player_X_MoveForce</code>) is only used in calculating acceleration, and does not contribute to updating his position. 
 <code>RunningTimer</code> is always set to 10 when B is held, Mario is on the ground and the directional inputs held correspond to the direction Mario is moving (<code>Left_Right_Buttons == Player_MovingDir</code>, where <code>Left_Right_Buttons</code> is set to <code>SavedJoypadBits &amp; 0x03</code>). It decrements by 1 every frame these conditions aren't met. </p>

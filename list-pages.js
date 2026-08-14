@@ -11,6 +11,7 @@ document.write('\
     <li><a href="Flagpole_glitch">Flagpole glitch</a></li>\
     <li><a href="Getting_started">Getting started</a></li>\
     <li><a href="Horizontal_movement">Horizontal movement</a></li>\
+    <li><a href="Judges">Judges</a></li>\
     <li><a href="List_of_BBG_setups">List of BBG setups</a></li>\
     <li><a href="List_of_TAS_8-2_setups">List of TAS 8-2 setups</a></li>\
     <li><a href="Vertical_movement">Vertical movement</a></li>\
