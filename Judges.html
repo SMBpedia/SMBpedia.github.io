@@ -9,13 +9,52 @@ Five frames in every 21 frame framerule get bad judges, so it is about a 24% cha
 
 Bad judges can be saved by jumping to hit the star block on the first possible frame it can be hit. 
 
+Judges got its name because before the mechanic was understood, it seemed to players as if there were invisible judges rating your performance through the level who would then decide to grant you the framerule or not. 
+
 ## Determining judges
 ![No white pixel, so 5 in 11 chance of bad judges&ensp;](img/bad-judges.png)
 ![White pixel is visible, guaranteeing good judges](img/good-judges.png)
 Bop the first buzzy beetle in the level on the left half. It is a four frame window to full jump and hit it at the right spot. If you see a white pixel on the ground to the right of the beetle, you can know for sure that it is good judges. If you do not see the white pixel, it is a 5 out of 11 chance (45%) that it is bad judges. The other 55% of the time is known as "fake baddies" and still saves the framerule. 
 
-## Technical explanation
+## Technical Explanation
 
+The Judges mechanic happens due to the flagpole flag object inheriting the vertical subpixel of the star powerup. The outcome of 8-1 depends on the alignment of the powerup movement cycle indirectly impacting how many frames it takes for the flag to lower.
+
+### Flag positioning
+When Mario grabs the flagpole, the flag lowers at a rate of (1 + 255/256) pixels per frame. This speed is exactly one sub-pixel less than 2 pixels per frame, meaning the flag "loses" 1 sub-pixel of height every frame it descends. 
+
+The game requires the flag to reach a position of at least 170.0 pixels from the top of the screen before stopping. It typically takes 62 frames for the flag to reach this position. However, if the Y-subpixel of the flag is at least 61 when it starts moving, the flag reaches the required position in exactly 61 frames.
+
+### Subpixel inheritance
+When the flagpole object is loaded, the game initializes the flag's vertical pixel to 48 but does not explicitly initialize its Y-subpixel. Consequently, its Y-subpixel retains the value that was previously stored at that memory address. 
+
+When Mario hits the star block in the middle of the level, the star moves upward out of the block and then begins to bounce. How long the star moves before going off screen and despawning depends on 1. the exact frame Mario jumps to hit the block, and 2. how long it took to move out of the block. 
+
+This movement duration dictates the final vertical subpixel of the star. Because the star and the flag object are loaded into the same enemy slot, the final value of the star's subpixel becomes the initial value for the flag's subpixel position.
+
+### Powerup rules
+Powerups can only start moving on specific frames dictated by "powerup rules" (a 4-frame cycle). When rising out out a powerup block, the powerup moves upwards 1 pixel every 4 frames until it reaches a specific height. This cycle starts on the first frame of the level transition screen, so the length of the transition screen for 8-1 determines the alignment of the cycle relative to Mario's arrival at the star block.
+
+If entering from 7-4 (e.g. in warpless), the level transition screen is always a fixed length. This results in consistent powerup rule alignment, always giving good judges. 
+
+When coming from 4-2, however, the length of the transition screen varies depending on the exact frame Mario entered the warp pipe. This means there are four possible alignments and the alignment changes each frame. 
+
+### Good judges vs. bad judges
+Saving the framerule thus depends on the powerup rule alignment and the frame Mario jumps to hit the star block. Because there are four possible alignments and six possible frames to hit the block, there are 24 possible subpixel values for the star:
+
+|144|144|144|144|236|236|
+|-|-|-|-|-|-|
+|**252**|**252**|**252**|**236**|**236**|**236**|
+|**216**|**216**|**064**|**064**|**064**|**064**|
+|**240**|<b style="color:red">004|<b style="color:red">004|<b style="color:red">004|<b style="color:red">004|<b style="color:red">016|
+
+**Good Judges:** All jump timings result in a Y-subpixel value ≥ 61, saving the frame on the flagpole.
+
+**Bad Judges:** Jumping on any frame *other than the first possible frame* results in a low Y-subpixel value (< 61). This causes the flag animation to take 62 frames instead of 61, costing Mario the framerule.
+
+## See also
+
+[How to Defeat the "Judges" in 8-1](https://www.speedrun.com/smb1/forums/6cgwo) by Muhahahahaz
 MARKDOWN-->
 <head>
 <meta charset="utf-8"/>
@@ -44,7 +83,7 @@ MARKDOWN-->
 </div>
 <div class="contentsPanel">
 <div class="contentsHeader">Contents</div>
-<ul><li><span>1</span><a href="#Determining_judges">Determining judges</a></li><li><span>2</span><a href="#Technical_explanation">Technical explanation</a></li></ul>
+<ul><li><span>1</span><a href="#Determining_judges">Determining judges</a></li><li><span>2</span><a href="#Technical_Explanation">Technical Explanation</a></li><li><span>3</span><a href="#See_also">See also</a></li></ul>
 <div style="margin-top: 1em; border-bottom: 1px solid #a2a9b1;"></div>
 <div class="contentsHeader" style="margin-top: 1em;">Other pages</div>
 <script src="list-pages.js"></script>
@@ -55,11 +94,68 @@ MARKDOWN-->
 <p><strong>Judges</strong> is the name given to a mechanic in 8-1 where you can save (good judges) or lose (bad judges) a frame depending on the frame you exit 4-2. This one frame is the difference between saving or losing a framerule if you play through the level without slowing down. </p>
 <p>Five frames in every 21 frame framerule get bad judges, so it is about a 24% chance assuming the exact speed you play through 4-2 is inconsistent. If, however, you play through 4-2 at a consistent pace (such as doing a setup for lightning), you will always get the same judges. </p>
 <p>Bad judges can be saved by jumping to hit the star block on the first possible frame it can be hit. </p>
+<p>Judges got its name because before the mechanic was understood, it seemed to players as if there were invisible judges rating your performance through the level who would then decide to grant you the framerule or not. </p>
 <section id="Determining_judges"><h2>Determining judges</h2>
 <p><div class="articleRight"><div class="articleRightInner"><img src="img/bad-judges.png"/></div>No white pixel, so 5 in 11 chance of bad judges </div>
 <div class="articleRight"><div class="articleRightInner"><img src="img/good-judges.png"/></div>White pixel is visible, guaranteeing good judges</div>
 Bop the first buzzy beetle in the level on the left half. It is a four frame window to full jump and hit it at the right spot. If you see a white pixel on the ground to the right of the beetle, you can know for sure that it is good judges. If you do not see the white pixel, it is a 5 out of 11 chance (45%) that it is bad judges. The other 55% of the time is known as "fake baddies" and still saves the framerule. </p>
-</section><section id="Technical_explanation"><h2>Technical explanation</h2></section></div>
+</section><section id="Technical_Explanation"><h2>Technical Explanation</h2>
+<p>The Judges mechanic happens due to the flagpole flag object inheriting the vertical subpixel of the star powerup. The outcome of 8-1 depends on the alignment of the powerup movement cycle indirectly impacting how many frames it takes for the flag to lower.</p>
+<h3>Flag positioning</h3>
+<p>When Mario grabs the flagpole, the flag lowers at a rate of (1 + 255/256) pixels per frame. This speed is exactly one sub-pixel less than 2 pixels per frame, meaning the flag "loses" 1 sub-pixel of height every frame it descends. </p>
+<p>The game requires the flag to reach a position of at least 170.0 pixels from the top of the screen before stopping. It typically takes 62 frames for the flag to reach this position. However, if the Y-subpixel of the flag is at least 61 when it starts moving, the flag reaches the required position in exactly 61 frames.</p>
+<h3>Subpixel inheritance</h3>
+<p>When the flagpole object is loaded, the game initializes the flag's vertical pixel to 48 but does not explicitly initialize its Y-subpixel. Consequently, its Y-subpixel retains the value that was previously stored at that memory address. </p>
+<p>When Mario hits the star block in the middle of the level, the star moves upward out of the block and then begins to bounce. How long the star moves before going off screen and despawning depends on 1. the exact frame Mario jumps to hit the block, and 2. how long it took to move out of the block. </p>
+<p>This movement duration dictates the final vertical subpixel of the star. Because the star and the flag object are loaded into the same enemy slot, the final value of the star's subpixel becomes the initial value for the flag's subpixel position.</p>
+<h3>Powerup rules</h3>
+<p>Powerups can only start moving on specific frames dictated by "powerup rules" (a 4-frame cycle). When rising out out a powerup block, the powerup moves upwards 1 pixel every 4 frames until it reaches a specific height. This cycle starts on the first frame of the level transition screen, so the length of the transition screen for 8-1 determines the alignment of the cycle relative to Mario's arrival at the star block.</p>
+<p>If entering from 7-4 (e.g. in warpless), the level transition screen is always a fixed length. This results in consistent powerup rule alignment, always giving good judges. </p>
+<p>When coming from 4-2, however, the length of the transition screen varies depending on the exact frame Mario entered the warp pipe. This means there are four possible alignments and the alignment changes each frame. </p>
+<h3>Good judges vs. bad judges</h3>
+<p>Saving the framerule thus depends on the powerup rule alignment and the frame Mario jumps to hit the star block. Because there are four possible alignments and six possible frames to hit the block, there are 24 possible subpixel values for the star:</p>
+<table>
+<thead>
+<tr>
+<th>144</th>
+<th>144</th>
+<th>144</th>
+<th>144</th>
+<th>236</th>
+<th>236</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>252</strong></td>
+<td><strong>252</strong></td>
+<td><strong>252</strong></td>
+<td><strong>236</strong></td>
+<td><strong>236</strong></td>
+<td><strong>236</strong></td>
+</tr>
+<tr>
+<td><strong>216</strong></td>
+<td><strong>216</strong></td>
+<td><strong>064</strong></td>
+<td><strong>064</strong></td>
+<td><strong>064</strong></td>
+<td><strong>064</strong></td>
+</tr>
+<tr>
+<td><strong>240</strong></td>
+<td><b style="color:red">004</b></td>
+<td><b style="color:red">004</b></td>
+<td><b style="color:red">004</b></td>
+<td><b style="color:red">004</b></td>
+<td><b style="color:red">016</b></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Good Judges:</strong> All jump timings result in a Y-subpixel value ≥ 61, saving the frame on the flagpole.</p>
+<p><strong>Bad Judges:</strong> Jumping on any frame <em>other than the first possible frame</em> results in a low Y-subpixel value (&lt; 61). This causes the flag animation to take 62 frames instead of 61, costing Mario the framerule.</p>
+</section><section id="See_also"><h2>See also</h2>
+<p><a href="https://www.speedrun.com/smb1/forums/6cgwo">How to Defeat the "Judges" in 8-1</a> by Muhahahahaz</p></section></div>
 <div class="pagefooter">
 				Template by <a href="http://html5-templates.com/" rel="nofollow" target="_blank">HTML5 Templates</a>
 <!-- Please leave this link unchanged -->

@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor, QKeySequence, QShortcut, QFont
 from spellchecker import SpellChecker
+import os
 import re
 
 
@@ -31,6 +32,22 @@ def slugify(text):
     text = re.sub(r"[^\w\s-]", "", text)
     text = re.sub(r"\s+", "_", text)
     return text
+
+def generate_list_pages():
+    html_files = [f for f in os.listdir('.') if f.endswith('.html') and f not in ['404.html', 'index.html', 'template.html']]
+    clean_names = sorted([f.replace('.html', '') for f in html_files])
+    
+    html_content = '<ul>'
+    for name in clean_names:
+        display_name = re.sub(r'_', ' ', name)
+        if (display_name == 'Any'):
+            display_name = 'Any%'
+        html_content += f'<li><a href="{name}">{display_name}</a></li>'
+    html_content += '</ul>'
+    document_write = f'document.write(\'{html_content}\');'
+    
+    with open('list-pages.js', 'w') as f:
+        f.write(document_write)
 
 class SpellHighlighter(QSyntaxHighlighter):
     def __init__(self, document):
@@ -306,6 +323,8 @@ Even more text.
             self.build_html(),
             encoding="utf8",
         )
+        
+        generate_list_pages()  # Update the list-pages.js 
         
     def open_html(self):
         filename, _ = QFileDialog.getOpenFileName(
