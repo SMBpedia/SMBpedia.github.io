@@ -103,3 +103,5 @@ warpless
 despawn
 despawned
 despawning
+strat
+strats
